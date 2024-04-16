@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-image: url('bgs.jpeg'); /* Set your background image path */
+        background-size: cover;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .stopwatch-container {
+        background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    .time-display {
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+    .control-buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .control-buttons button {
+        margin: 0 10px;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="stopwatch-container">
+        <div class="time-display" id="time-display">00:00:00</div>
+        <div class="control-buttons">
+            <button onclick="startStopwatch()">Start</button>
+            <button onclick="stopStopwatch()">Stop</button>
+            <button onclick="resetStopwatch()">Reset</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let timer;
+    let startTime;
+    let elapsedTime = 0;
+    let running = false;
+
+    function startStopwatch() {
+        if (!running) {
+            startTime = Date.now() - elapsedTime;
+            timer = setInterval(updateTime, 10);
+            running = true;
+        }
+    }
+
+    function stopStopwatch() {
+        if (running) {
+            clearInterval(timer);
+            running = false;
+        }
+    }
+
+    function resetStopwatch() {
+        clearInterval(timer);
+        elapsedTime = 0;
+        updateDisplay();
+        running = false;
+    }
+
+    function updateTime() {
+        const currentTime = Date.now();
+        elapsedTime = currentTime - startTime;
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        const timeDisplay = document.getElementById('time-display');
+        const milliseconds = elapsedTime % 1000;
+        const seconds = Math.floor((elapsedTime / 1000) % 60);
+        const minutes = Math.floor((elapsedTime / (1000 * 60)) % 60);
+        const hours = Math.floor((elapsedTime / (1000 * 60 * 60)) % 24);
+        timeDisplay.textContent = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    }
+
+    function formatTime(time) {
+        return time < 10 ? `0${time}` : time;
+    }
+</script>
+
+</body>
+</html>
